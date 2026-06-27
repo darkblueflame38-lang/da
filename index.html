@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Van Kahvaltısı Karaff | Dijital Menü</title>
+    <style>
+        /* TEMEL AYARLAR (DIŞ BAĞLANTI YOK) */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #faf9f6; color: #333; line-height: 1.6; }
+        
+        /* BAŞLIK KISMI */
+        header { background: linear-gradient(135deg, #382415, #1f140b); color: #fff; text-align: center; padding: 3rem 1rem; border-bottom: 4px solid #d97706; }
+        header p { font-size: 0.85rem; letter-spacing: 2px; color: #fcd34d; text-transform: uppercase; margin-bottom: 0.5rem; font-weight: bold; }
+        header h1 { font-size: 2.2rem; margin-bottom: 0.5rem; color: #fff; }
+        
+        /* KATEGORİ BUTONLARI (SEKMELER) */
+        nav { background: #fff; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 6px rgba(0,0,0,0.05); padding: 1rem; overflow-x: auto; white-space: nowrap; text-align: center; border-bottom: 1px solid #eaeaea; }
+        nav::-webkit-scrollbar { display: none; } /* Mobil kaydırma çubuğunu gizle */
+        .tab-btn { background: #f3f4f6; border: 1px solid #e5e7eb; padding: 0.6rem 1.2rem; margin: 0 0.2rem; border-radius: 50px; cursor: pointer; font-weight: 600; color: #4b5563; transition: all 0.2s ease; font-size: 0.9rem; }
+        .tab-btn:hover { background: #e5e7eb; }
+        .tab-btn.active { background: #d97706; color: #fff; border-color: #d97706; box-shadow: 0 2px 4px rgba(217, 119, 6, 0.3); }
+        
+        /* MENÜ İÇERİK ALANI */
+        main { max-width: 800px; margin: 2rem auto; padding: 0 1rem; min-height: 50vh; }
+        .category { background: #fff; border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid #f3f4f6; }
+        .category-title { font-size: 1.4rem; border-bottom: 2px solid #fef3c7; padding-bottom: 0.5rem; margin-bottom: 1.5rem; color: #92400e; font-weight: bold; }
+        
+        /* YEMEK SATIRLARI */
+        .menu-item { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.2rem; }
+        .item-name { font-weight: 600; font-size: 1rem; color: #1f2937; }
+        .item-dots { flex-grow: 1; border-bottom: 1px dashed #d1d5db; margin: 0 12px; position: relative; top: -6px; }
+        .item-price { font-weight: 700; color: #b45309; font-size: 1.05rem; background: #fffbeb; padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid #fef3c7; }
+        
+        /* ALT BİLGİ */
+        footer { text-align: center; padding: 2rem; background: #fff; color: #9ca3af; font-size: 0.8rem; border-top: 1px solid #f3f4f6; margin-top: 2rem; }
+        
+        /* GİZLEME SINIFI (Filtreleme için) */
+        .hidden { display: none !important; }
+        
+        /* EKRAN KÜÇÜLÜNCE KARTLARI YAN YANA ALMA */
+        @media (min-width: 768px) {
+            .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 0 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <p>Geleneksel & Modern Lezzetler</p>
+        <h1>VAN KAHVALTISI KARAFF</h1>
+    </header>
+
+    <nav>
+        <button onclick="filterCategory('all', this)" class="tab-btn active">Hepsi</button>
+        <button onclick="filterCategory('cat-kahvalti', this)" class="tab-btn">Kahvaltı</button>
+        <button onclick="filterCategory('cat-corba', this)" class="tab-btn">Çorbalar</button>
+        <button onclick="filterCategory('cat-salata', this)" class="tab-btn">Salatalar</button>
+        <button onclick="filterCategory('cat-makarna', this)" class="tab-btn">Makarnalar</button>
+        <button onclick="filterCategory('cat-anayemek', this)" class="tab-btn">Ana Yemekler</button>
+        <button onclick="filterCategory('cat-pizza', this)" class="tab-btn">Pizzalar</button>
+    </nav>
+
+    <main>
+        
+        <div id="cat-kahvalti" class="category">
+            <div class="category-title">Kahvaltı</div>
+            <div class="grid-container">
+                <div class="menu-item"><span class="item-name">Van Kahvaltısı (Kişi Başı)</span><span class="item-dots"></span><span class="item-price">400 ₺</span></div>
+                <div class="menu-item"><span class="item-name">Tabakta Kahvaltı</span><span class="item-dots"></span><span class="item-price">350 ₺</span></div>
+                <div class="menu-item"><span class="item-name">Peynirli Gözleme</span><span class="item-dots"></span><span class="item-price">190 ₺</span></div>
+                <div class="menu-item"><span class="item-name">Kaşarlı Gözleme</span><span class="item-dots"></span><span class="item-price">190 ₺</span></div>
+                <div class="menu-item"><span class="item-name">Patatesli Gözleme</span><span class="item-dots"></span><span class="item-price">190 ₺</span></div>
+                <div class="menu-item"><span class="item-name">Ispanaklı Gözleme</span><span class="item-dots"></span><span class="item-price">190 ₺</span></div>
+                <div class="menu-item"><span class="item-name">Sucuklu Kaşarlı Gözleme</span><span class="item-dots"></span><span class="item-price">220 ₺</span></div>
+                <div class="menu-item"><span class="item-name">Kavurmalı Kaşarlı Gözleme</span><span class="item-dots"></span><span class="item-price">250 ₺</span></div>
+                <div class="menu-item"><span class="item-name">Sade Omlet</span><span class="item-dots"></span><span class="item-price">220 ₺</span></div>
+                <div class="menu-item"><span class="item-name">Kaşarlı Omlet</span><span class="item-dots"></span><span class="item-price">250 ₺</span></div>
+                <div class="menu-item"><span class="item-name">Sucuklu Yumurta</span><span class="item-dots"></span><span class="item-price">320 ₺</span></div>
+                <div class="menu-item"><span class="item-name">Kavurmalı Yumurta</span><span class="item-dots"></span><span class="item-price">350 ₺</span></div>
+                <div class="menu-item"><span class="item-name">Sucuklu Kaşarlı Tost</span><span class="item-dots"></span><span class="item-price">230 ₺</span></div>
+            </div>
+        </div>
+
+        <div id="cat-corba" class="category">
+            <div class="category-title">Çorbalar</div>
+            <div class="grid-container">
+                <div class="menu-item"><span class="item-name">Tavuk Çorbası</span><span class="item-dots"></span><span class="item-price">250 ₺</span></div>
+                <div class="menu-item"><span class="item-name">Mercimek Çorbası</span><span class="item-dots"></span><span class="item-price">230 ₺</span></div>
+            </div>
+        </div>
+
+        <div id="cat-salata" class="category">
+            <div class="category-title">Salatalar & Bowl</div>
+            <div class="grid-container">
+                <div class="menu-item"><span class="item-name">Karışık Salata</span><span class="item-dots"></span><span class="item-price">250 ₺</span></div>
+                <div class="menu-item"><span class="item-name">Çoban Salata</span><span class="item-dots"></span><span class="item-price">250 ₺</span></div>
+                <div class="menu-item"><span class="item-name">Ton Balıklı Salata</span><span class="item-dots"></span><span class="item-price">380 ₺</span></div>
+                <div class="menu-item"><span class="item-name">Somon Bowl</span><span class="item-dots"></span><span class="item-price">450 ₺</span></div>
+                <div class="menu-item"><span class="item-name">Hellim Bowl</span><span class="item-dots"></span><span class="item-price">300 ₺</span></div>
+                <div class="menu-item"><span class="item-name">Karides Bowl</span><span class="item-dots"></span><span class="item-price">570 ₺</span></div>
+            </div>
+        </div>
+
+        <div id="cat-makarna" class="category">
+            <div class="category-title">Makarnalar</div>
+            <div class="grid-container">
+                <div class="menu-item"><span class="item-name">Spagetti Bolonez</span><span class="item-dots"></span><span class="item-price">300 ₺</span></div>
+                <div class="menu-item"><span class="item-name">Penne Bolonez</span><span class="item-dots"></span><span class="item-price">300 ₺</span></div>
+                <div class="menu-item"><span class="item-name">Ton Balıklı Penne</span><span class="item-dots"></span><span class="item-price">300 ₺</span></div>
+                <div class="menu-item"><span class="item-name">Somonlu Penne</span><span class="item-dots"></span><span class="item-price">350 ₺</span></div>
+                <div class="menu-item"><span class="item-name">Karaff Spesiyal</span><span class="item-dots"></span><span class="item-price">350 ₺</span></div>
+            </div>
+        </div>
+
+        <div id="cat-anayemek" class="category">
+            <div class="category-title">Ana Yemekler & Kebaplar</div>
+            <div class="grid-container">
+                <div class="menu-item"><span class="item-name">Kuzu Pirzola</span><span class="item-dots"></span><span class="item-price">750 ₺</span></div>
+                <div class="menu-item"><span class="item-name">Kuzu Şiş</span><span class="item-dots"></span><span class="item-price">570 ₺</span></div>
+                <div class="menu-item"><span class="item-name">Dana Şiş</span><span class="item-dots"></span><span class="item-price">500 ₺</span></div>
+                <div class="menu-item"><span class="item-name">Izgara Köfte</span><span class="item-dots"></span><span class="item-price">450 ₺</span></div>
+                <div class="menu-item"><span class="item-name">Osmanlı Kuzu (Güveç)</span><span class="item-dots"></span><span class="item-price">500 ₺</span></div>
+                <div class="menu-item"><span class="item-name">Tavuk Izgara</span><span class="item-dots"></span><span class="item-price">350 ₺</span></div>
+                <div class="menu-item"><span class="item-name">Köri Soslu Tavuk</span><span class="item-dots"></span><span class="item-price">350 ₺</span></div>
+                <div class="menu-item"><span class="item-name">Somon</span><span class="item-dots"></span><span class="item-price">600 ₺</span></div>
+                <div class="menu-item"><span class="item-name">Hamburger</span><span class="item-dots"></span><span class="item-price">350 ₺</span></div>
+                <div class="menu-item"><span class="item-name">Cheeseburger</span><span class="item-dots"></span><span class="item-price">350 ₺</span></div>
+            </div>
+        </div>
+
+        <div id="cat-pizza" class="category">
+            <div class="category-title">Pizzalar</div>
+            <div class="grid-container">
+                <div class="menu-item"><span class="item-name">Pizza Margarita</span><span class="item-dots"></span><span class="item-price">250 ₺</span></div>
+                <div class="menu-item"><span class="item-name">4 Peynirli Pizza</span><span class="item-dots"></span><span class="item-price">280 ₺</span></div>
+                <div class="menu-item"><span class="item-name">Sucuklu Pizza</span><span class="item-dots"></span><span class="item-price">280 ₺</span></div>
+                <div class="menu-item"><span class="item-name">Karaff Pizza</span><span class="item-dots"></span><span class="item-price">300 ₺</span></div>
+                <div class="menu-item"><span class="item-name">Vejetaryen Pizza</span><span class="item-dots"></span><span class="item-price">300 ₺</span></div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Van Kahvaltısı Karaff. Tüm Hakları Saklıdır.</p>
+    </footer>
+
+    <script>
+        function filterCategory(categoryId, buttonElement) {
+            // 1. Tüm butonların rengini sıfırla, tıklananı turuncu yap
+            var buttons = document.querySelectorAll('.tab-btn');
+            for(var i = 0; i < buttons.length; i++) {
+                buttons[i].classList.remove('active');
+            }
+            buttonElement.classList.add('active');
+
+            // 2. Kategorileri göster veya gizle
+            var categories = document.querySelectorAll('.category');
+            for(var j = 0; j < categories.length; j++) {
+                if (categoryId === 'all') {
+                    categories[j].classList.remove('hidden');
+                } else {
+                    if (categories[j].id === categoryId) {
+                        categories[j].classList.remove('hidden');
+                    } else {
+                        categories[j].classList.add('hidden');
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>
